@@ -1,0 +1,59 @@
+.hero-banner {
+  position: relative;        /* REQUIRED */
+  padding-top: 64px;         /* navbar height */
+  height: 100vh;
+  width: 100%;
+
+  background-image: url("/banner.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* TEXT – TOP OF IMAGE, SAFE ZONE */
+.hero-overlay {
+  position: absolute;
+  top: 85px;                /* BELOW navbar, ON image */
+  left: 6%;
+
+  max-width: 420px;
+  color: #111111;
+}
+
+/* MAIN TEXT */
+.hero-overlay h1 {
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 12px 0;
+  color: #111111;
+}
+
+/* SUB TEXT */
+.hero-overlay p {
+  font-size: 16px;
+  color: #333333;
+  margin-bottom: 20px;
+}
+
+/* BUTTON */
+.hero-overlay button {
+  background-color: #2874f0;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.hero-overlay button:hover {
+  background-color: #1a5fd0;
+}
+
+
+
+
+
+
+

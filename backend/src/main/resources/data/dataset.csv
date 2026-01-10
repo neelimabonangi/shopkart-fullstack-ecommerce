@@ -1,0 +1,36 @@
+id,name,category,price,imageUrl
+4,Blue Floral Top,Women,1499,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767604854/shopping_kfd153.webp,4.2,156,50,True
+5,Yellow Printed Top,Women,1399,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767605846/img_c2r0lf.webp,4.1,165,60,True
+6,Green Half Saree,Women,3499,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767607932/Green_half_saree_sqcilf.jpg,4.4,174,70,True
+7,Blue Half Saree,Women,3600,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767608406/Blue_Half_saree_uk6a0u.jpg,3.8,183,10,False
+8,Pink Half Saree,Women,2699,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767608934/Pink_Half_saree_xdkssg.jpg,4.5,225,55,True
+9,Anarkali Kurta Set,Women,999,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767609245/Anarkali_Kurta_Set_osew9t.jpg,4.0,142,40,True
+10,Cotton Blend Printed Straight Kurta,Women,799,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767609559/Cotton_Blend_Printed_Straight_Kurta_mxbips.jpg,4.2,178,45,True
+11,Cotton Kurti Pyjama Set,Women,480,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767610337/Cotton_Kurti_Pyjama_Set_pp37cm.webp,3.9,133,30,True
+12,Maxi Light Green Full Length Dress,Women,780,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767610752/Maxi_Light_Green_Full_Length_Dress_ekbyht.webp,4.3,201,35,False
+13,Western Maxi Dress,Women,450,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767610955/Western_Maxi_Dress_gkzc9a.jpg,3.7,121,25,True
+14,Cotton Comfort Fit Top,Women,1199,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767611222/Cotton_Comfort_Fit_Top_tfeusg.jpg,4.1,187,50,True
+15,Maroon Silk Blend Solid Top,Women,499,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767612457/Maroon_Silk_Blend_Solid_Top_ev1etd.jpg,4.0,156,20,False
+16,Women Stylish Western,Women,459,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767612946/Women_Stylish_Western_pbt7jq.jpg,3.8,139,15,True
+17,Crop Shirt for Women,Women,599,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767613478/Crop_Shirt_for_Women_x1gvze.jpg,4.2,190,30,True
+18,Lehenga With Dupatta,Women,4599,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767613785/Lehenga_With_Dupatta_dhhk5e.jpg,4.6,260,65,True
+20,Black Shirt for Men,Men,1499,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767614869/Black_shirt_for_men_vnzhpf.jpg,4.3,210,40,True
+21,Men's Casual Cotton Plain Shirt,Men,485,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767615191/Men_s_Casual_shirt_lw0m0u.jpg,4.0,192,30,True
+22,Men Regular Fit Shirt,Men,599,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767615479/Men_Regular_Fit_Shirt_xcnxga.webp,4.1,176,25,False
+23,Men Regular Fit Solid Casual Shirt,Men,699,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767615665/Men_Regular_Fit_Solid_Spread_Collar_Casual_Shirt_v450cz.webp,4.2,201,35,True
+24,Men Printed Full Sleeve T-Shirt,Men,299,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767615909/Men_s_Cotton_Regular_Fit_Printed_Round_Neck_Full_Sleeve_T-Shirt_avgd4p.jpg,3.9,155,20,True
+25,Fancy Double Pocket Casual Shirt for Men,Men,495,https://res.cloudinary.com/dcxxbppu6/image/upload/v1767616169/Fancy_Double_Pocket_Casual_Shirt_for_Men_eefo2y.jpg,4.1,184,30,False
+
+Total Rows (Records):
+27 rows → 27 products (Men + Women)
+
+Total Columns (Fields):
+5 columns
+
+🧾 Column Names
+id-Product ID
+name-Product name
+category-Men / Women
+price-Product price
+imageUrl-Product image link
+

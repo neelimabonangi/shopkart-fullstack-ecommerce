@@ -1,0 +1,26 @@
+/* Main products page wrapper */
+.products-page {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f1f3f6;
+  padding: 24px 40px;
+  box-sizing: border-box;
+}
+
+/* Ensure product grid starts clearly below navbar */
+.products-page .products-container {
+  margin-top: 10px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  .products-page {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .products-page {
+    padding: 15px;
+  }
+}

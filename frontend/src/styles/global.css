@@ -1,0 +1,114 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+}
+
+/* BODY – Flipkart background */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f1f3f6;
+  color: #212121;
+}
+
+/* LINKS */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* PAGE WRAPPER */
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* MAIN CONTENT (filters + products) */
+.content {
+  display: flex;
+  gap: 16px;
+}
+
+/* FILTER PANEL (LEFT) */
+.filters {
+  width: 250px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 4px;
+  height: fit-content;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.filters h4 {
+  margin-top: 0;
+}
+
+.filters p {
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+/* PRODUCTS CONTAINER (RIGHT) */
+.products {
+  flex: 1;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+/* PRODUCT GRID */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* PRODUCT CARD */
+.product-card {
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+  padding: 12px;
+  transition: box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* PRODUCT IMAGE */
+.product-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+/* PRODUCT TITLE */
+.product-card p {
+  font-size: 14px;
+  margin: 6px 0;
+}
+
+/* PRICE */
+.price {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* OLD PRICE */
+.old-price {
+  text-decoration: line-through;
+  color: #878787;
+  margin-left: 6px;
+  font-size: 13px;
+}
+
+/* DISCOUNT */
+.discount {
+  color: #388e3c;
+  margin-left: 6px;
+  font-size: 13px;
+  font-weight: bold;
+}
