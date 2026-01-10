@@ -8,7 +8,7 @@ function AdminOrderDetails() {
   const order = location.state?.order;
 
   if (!order) {
-    return <h2>No order found</h2>;
+    return <h2 style={{ padding: "20px" }}>No order found</h2>;
   }
 
   return (
@@ -33,24 +33,40 @@ function AdminOrderDetails() {
               <tr key={index}>
                 <td>
                   <img
-                    src={item.imageUrl}
+                    src={item.imageUrl || item.image || "/no-image.png"}
                     alt={item.name}
                     width="50"
                     height="50"
-                    style={{ objectFit: "cover", borderRadius: "6px" }}
+                    style={{
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                    }}
                   />
                 </td>
                 <td>{item.name}</td>
                 <td>₹{item.price}</td>
-                <td>₹{item.price}</td> {/* No qty → total = price */}
+                <td>₹{item.price}</td>
               </tr>
             ))}
           </tbody>
         </table>
 
-        <h3>Total Amount: ₹{order.total}</h3>
+        <h3 style={{ marginTop: "20px" }}>
+          Total Amount: ₹{order.total}
+        </h3>
 
-        <button onClick={() => navigate("/admin/orders")}>
+        <button
+          style={{
+            marginTop: "15px",
+            padding: "8px 16px",
+            backgroundColor: "#2874f0",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+            borderRadius: "4px",
+          }}
+          onClick={() => navigate("/admin/orders")}
+        >
           Back to Orders
         </button>
       </div>
@@ -59,6 +75,7 @@ function AdminOrderDetails() {
 }
 
 export default AdminOrderDetails;
+
 
 
 

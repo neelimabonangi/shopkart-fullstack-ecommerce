@@ -1,8 +1,16 @@
-import { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { BASE_URL } from "../config";
 
 function Orders() {
-  const { orders } = useContext(CartContext);
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/api/orders`)
+      .then((res) => setOrders(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   if (!orders || orders.length === 0) {
     return (
@@ -19,7 +27,7 @@ function Orders() {
 
       {orders.map((order, index) => (
         <div
-          key={order.id}
+          key={order.id || index}
           style={{
             background: "#f7f7f7",
             borderRadius: "10px",
@@ -27,7 +35,6 @@ function Orders() {
             marginBottom: "24px",
           }}
         >
-          {/* ================= ORDER CARD ================= */}
           <div
             style={{
               display: "flex",
@@ -36,7 +43,6 @@ function Orders() {
               gap: "30px",
             }}
           >
-            {/* LEFT SIDE – DETAILS */}
             <div style={{ flex: 1 }}>
               <h4 style={{ marginBottom: "8px" }}>
                 Order #{index + 1}
@@ -52,7 +58,6 @@ function Orders() {
                 Ordered on: {order.date}
               </p>
 
-              {/* PRODUCTS INFO */}
               {order.items.map((item, i) => (
                 <div key={i} style={{ marginTop: "14px" }}>
                   <p style={{ fontWeight: "600", fontSize: "16px" }}>
@@ -65,7 +70,6 @@ function Orders() {
               ))}
             </div>
 
-            {/* RIGHT SIDE – BIG IMAGE */}
             <div
               style={{
                 width: "280px",
@@ -82,7 +86,7 @@ function Orders() {
                 alt={order.items[0].name}
                 style={{
                   width: "100%",
-                  height: "340px",        // 🔥 BIG IMAGE
+                  height: "340px",
                   objectFit: "cover",
                   borderRadius: "10px",
                 }}
@@ -96,6 +100,7 @@ function Orders() {
 }
 
 export default Orders;
+
 
 
 

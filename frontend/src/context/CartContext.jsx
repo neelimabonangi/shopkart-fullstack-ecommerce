@@ -1,39 +1,39 @@
 import { createContext, useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "../config";
 
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  // 🔁 Load from localStorage
+  // 🛒 CART (persisted locally)
   const [cart, setCart] = useState(() => {
     return JSON.parse(localStorage.getItem("cart")) || [];
   });
 
-  const [orders, setOrders] = useState(() => {
-    return JSON.parse(localStorage.getItem("orders")) || [];
-  });
+  // 📦 ORDERS (from backend)
+  const [orders, setOrders] = useState([]);
 
   // 💾 Persist cart
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // 💾 Persist orders
+  // 🔄 Fetch orders from backend
   useEffect(() => {
-    localStorage.setItem("orders", JSON.stringify(orders));
-  }, [orders]);
+    axios
+      .get(`${BASE_URL}/api/orders`)
+      .then((res) => setOrders(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
-  // ✅ STRICT UNIQUE BY PRODUCT ID ONLY
+  // ✅ UNIQUE ADD TO CART
   const addToCart = (product) => {
     if (!product || product.id == null) return;
 
     setCart((prev) => {
       const exists = prev.some((item) => item.id === product.id);
-
-      if (exists) {
-        return prev;
-      }
-
-      return [...prev, { ...product }];
+      if (exists) return prev;
+      return [...prev, { ...product, quantity: 1 }];
     });
   };
 
@@ -41,19 +41,23 @@ export function CartProvider({ children }) {
     setCart((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = () => {
+    setCart([]);
+    localStorage.removeItem("cart");
+  };
 
-  // 🛒 PLACE ORDER (FIXED)
-  const placeOrder = (orderData) => {
+  // 🛒 PLACE ORDER (LIVE BACKEND)
+  const placeOrder = async (orderData) => {
     if (!orderData || !orderData.items || orderData.items.length === 0) return;
 
-    const newOrder = {
-      id: Date.now(),
-      ...orderData,
-    };
-
-    setOrders((prev) => [...prev, newOrder]);
-    setCart([]); // 🔥 CLEAR CART AFTER CHECKOUT
+    try {
+      const res = await axios.post(`${BASE_URL}/api/orders`, orderData);
+      setOrders((prev) => [...prev, res.data]);
+      clearCart(); // 🔥 CLEAR CART AFTER CHECKOUT
+    } catch (err) {
+      console.error("Order failed:", err);
+      alert("Order failed");
+    }
   };
 
   // 🔔 UNIQUE COUNT
@@ -70,7 +74,7 @@ export function CartProvider({ children }) {
         addToCart,
         removeFromCart,
         clearCart,
-        placeOrder, // 🔥 FIXED
+        placeOrder,
         totalItems,
         totalPrice,
       }}
@@ -79,6 +83,7 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
+
 
 
 

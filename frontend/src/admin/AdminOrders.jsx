@@ -1,12 +1,20 @@
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../context/CartContext";
+import axios from "axios";
 import AdminSidebar from "./AdminSidebar";
 import "./Admin.css";
+import { BASE_URL } from "../config";
 
 function AdminOrders() {
-  const { orders } = useContext(CartContext);
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/api/orders`)
+      .then((res) => setOrders(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
     <div className="admin-layout">
@@ -30,7 +38,7 @@ function AdminOrders() {
 
             <tbody>
               {orders.map((order, index) => (
-                <tr key={index}>
+                <tr key={order.id || index}>
                   <td>{index + 1}</td>
                   <td>{order.items.length}</td>
                   <td>₹{order.total}</td>
@@ -38,7 +46,7 @@ function AdminOrders() {
                     <button
                       className="edit-btn"
                       onClick={() =>
-                        navigate(`/admin/orders/${index}`, {
+                        navigate(`/admin/orders/${order.id || index}`, {
                           state: { order },
                         })
                       }
@@ -57,5 +65,6 @@ function AdminOrders() {
 }
 
 export default AdminOrders;
+
 
 

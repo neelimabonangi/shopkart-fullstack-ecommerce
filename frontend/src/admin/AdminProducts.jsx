@@ -3,26 +3,31 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar";
 import "./Admin.css";
+import { BASE_URL } from "../config";
 
 function AdminProducts() {
   const [products, setProducts] = useState([]);
-  const navigate = useNavigate(); // ✅ added
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/products")
+      .get(`${BASE_URL}/api/products`)
       .then((res) => setProducts(res.data))
       .catch((err) => console.error(err));
   }, []);
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const confirm = window.confirm("Delete this product?");
     if (!confirm) return;
 
-    setProducts(products.filter((p) => p.id !== id));
+    try {
+      await axios.delete(`${BASE_URL}/api/products/${id}`);
+      setProducts(products.filter((p) => p.id !== id));
+    } catch (err) {
+      alert("Failed to delete");
+    }
   };
 
-  // ✅ EDIT HANDLER
   const handleEdit = (product) => {
     navigate(`/admin/products/edit/${product.id}`, {
       state: { product },
@@ -57,13 +62,9 @@ function AdminProducts() {
                 <td>{p.category}</td>
                 <td>₹{p.price}</td>
                 <td>
-                  <button
-                    className="edit-btn"
-                    onClick={() => handleEdit(p)}
-                  >
+                  <button className="edit-btn" onClick={() => handleEdit(p)}>
                     Edit
                   </button>
-
                   <button
                     className="delete-btn"
                     onClick={() => handleDelete(p.id)}
@@ -81,6 +82,8 @@ function AdminProducts() {
 }
 
 export default AdminProducts;
+
+
 
 
 

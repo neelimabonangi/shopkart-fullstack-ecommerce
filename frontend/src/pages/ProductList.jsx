@@ -3,6 +3,7 @@ import axios from "axios";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import "./ProductList.css";
+import { BASE_URL } from "../config";
 
 function ProductList({ category, search }) {
   const [products, setProducts] = useState([]);
@@ -17,7 +18,7 @@ function ProductList({ category, search }) {
   // 🔹 Fetch products
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/products")
+      .get(`${BASE_URL}/api/products`)
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -34,7 +35,6 @@ function ProductList({ category, search }) {
     return matchCategory && matchSearch;
   });
 
-  // ⭐ Rating helpers
   const getBaseRating = (product) =>
     ratings[product.id] ??
     Number(((product.id % 5) + 1 + Math.random()).toFixed(1));
@@ -78,7 +78,6 @@ function ProductList({ category, search }) {
 
           return (
             <div key={product.id} className="product-card">
-              {/* ⭐ Rating */}
               <div className="rating-container">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <span
@@ -98,7 +97,6 @@ function ProductList({ category, search }) {
                 </span>
               </div>
 
-              {/* 🖼 IMAGE → ZOOM ONLY */}
               <div
                 className="image-wrapper zoomable"
                 onClick={() =>
@@ -133,7 +131,6 @@ function ProductList({ category, search }) {
                 <p className="delivery">Free Delivery</p>
               )}
 
-              {/* 👕 SIZE */}
               <div className="size-section">
                 <span className="size-label">Select Size</span>
                 <div className="size-options">
@@ -158,9 +155,7 @@ function ProductList({ category, search }) {
                 </div>
               </div>
 
-              {/* 🛒 ACTIONS */}
               <div className="action-row">
-                {/* ✅ ADD TO CART — UNIQUE ONLY */}
                 <button
                   className="add-cart-btn"
                   onClick={() => {
@@ -183,7 +178,6 @@ function ProductList({ category, search }) {
                   Add to Cart
                 </button>
 
-                {/* ✅ BUY NOW — SINGLE PRODUCT */}
                 <button
                   className="buy-now-btn"
                   onClick={() => {
@@ -220,6 +214,9 @@ function ProductList({ category, search }) {
 }
 
 export default ProductList;
+
+
+
 
 
 

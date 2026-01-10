@@ -1,7 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
 import AdminSidebar from "./AdminSidebar";
 import "./Admin.css";
+import { BASE_URL } from "../config";
 
 function AdminEditProduct() {
   const location = useLocation();
@@ -17,11 +19,27 @@ function AdminEditProduct() {
     return <h2 style={{ padding: "20px" }}>No product found</h2>;
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    alert("Product updated (frontend only)");
-    navigate("/admin/products");
+    const updatedProduct = {
+      name,
+      price,
+      category,
+      imageUrl,
+    };
+
+    try {
+      await axios.put(
+        `${BASE_URL}/api/products/${product.id}`,
+        updatedProduct
+      );
+      alert("Product updated successfully!");
+      navigate("/admin/products");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update product");
+    }
   };
 
   return (
@@ -36,6 +54,7 @@ function AdminEditProduct() {
             type="text"
             placeholder="Product Name"
             value={name}
+            required
             onChange={(e) => setName(e.target.value)}
           />
 
@@ -43,6 +62,7 @@ function AdminEditProduct() {
             type="number"
             placeholder="Price"
             value={price}
+            required
             onChange={(e) => setPrice(e.target.value)}
           />
 
@@ -50,6 +70,7 @@ function AdminEditProduct() {
             type="text"
             placeholder="Category"
             value={category}
+            required
             onChange={(e) => setCategory(e.target.value)}
           />
 
@@ -57,6 +78,7 @@ function AdminEditProduct() {
             type="text"
             placeholder="Image URL"
             value={imageUrl}
+            required
             onChange={(e) => setImageUrl(e.target.value)}
           />
 
@@ -70,6 +92,7 @@ function AdminEditProduct() {
 }
 
 export default AdminEditProduct;
+
 
 
 

@@ -19,11 +19,10 @@ function AdminDashboard() {
   const totalOrders = orders.length;
 
   const totalRevenue = orders.reduce(
-    (sum, order) => sum + order.total,
+    (sum, order) => sum + (order.total || 0),
     0
   );
 
-  // ✅ FIXED: Total products in cart
   const totalCartItems = cart.length;
 
   return (
@@ -55,6 +54,7 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
 
 
 

@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../config";
 
 function Checkout() {
-  const { cart, placeOrder } = useContext(CartContext);
+  const { cart, clearCart } = useContext(CartContext);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 🔥 BUY NOW PRODUCT
   const buyNowProduct = location.state?.buyNowProduct;
 
   const initialItems = buyNowProduct
@@ -53,7 +54,7 @@ function Checkout() {
     0
   );
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (!address.trim()) {
       alert("Please enter delivery address");
       return;
@@ -64,16 +65,24 @@ function Checkout() {
       return;
     }
 
-    // 🔥 USE CONTEXT METHOD
-    placeOrder({
+    const orderData = {
       items,
       total: checkoutTotal,
       address,
       paymentMethod,
+      upiApp: paymentMethod === "UPI" ? upiApp : null,
+      upiId: paymentMethod === "UPI" ? upiId : null,
       date: new Date().toLocaleString(),
-    });
+    };
 
-    setOrderPlaced(true);
+    try {
+      await axios.post(`${BASE_URL}/api/orders`, orderData);
+      setOrderPlaced(true);
+      clearCart && clearCart();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to place order");
+    }
   };
 
   if (orderPlaced) {
@@ -232,6 +241,7 @@ function Checkout() {
 }
 
 export default Checkout;
+
 
 
 
