@@ -6,9 +6,9 @@ spring:
     name: ecommerce
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ecommerce
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://dpg-d5gvuba4d50c738n993g-a.virginia-postgres.render.com:5432/shopkart_db_3eav
+    username: shopkart_db_3eav_user
+    password: 8U0dixUwqwJqj2ebwJi4ALgK1FdRsk00
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -20,6 +20,7 @@ spring:
   devtools:
     restart:
       enabled: false
+
 
 
 
