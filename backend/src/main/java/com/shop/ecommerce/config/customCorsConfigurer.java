@@ -6,9 +6,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class customCorsConfigurer {
+public class CustomCorsConfigurer {
 
-    @Bean(name = "customCorsConfigurer")
+    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -25,6 +25,4 @@ public class customCorsConfigurer {
         };
     }
 }
-
-
 
