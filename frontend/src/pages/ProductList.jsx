@@ -15,7 +15,7 @@ function ProductList({ category, search }) {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  // 🔹 Fetch products
+  // 🔹 Fetch products from LIVE backend
   useEffect(() => {
     axios
       .get(`${BASE_URL}/api/products`)
@@ -23,7 +23,10 @@ function ProductList({ category, search }) {
         setProducts(res.data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Error loading products:", err);
+        setLoading(false);
+      });
   }, []);
 
   // 🔹 Filters
@@ -101,18 +104,12 @@ function ProductList({ category, search }) {
                 className="image-wrapper zoomable"
                 onClick={() =>
                   setZoomImage(
-                    product.imageUrl ||
-                      product.image ||
-                      "/no-image.png"
+                    product.imageUrl || product.image || "/no-image.png"
                   )
                 }
               >
                 <img
-                  src={
-                    product.imageUrl ||
-                    product.image ||
-                    "/no-image.png"
-                  }
+                  src={product.imageUrl || product.image || "/no-image.png"}
                   alt={product.name}
                 />
               </div>
@@ -214,6 +211,7 @@ function ProductList({ category, search }) {
 }
 
 export default ProductList;
+
 
 
 
