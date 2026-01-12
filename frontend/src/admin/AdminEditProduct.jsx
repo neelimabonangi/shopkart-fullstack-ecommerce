@@ -24,7 +24,7 @@ function AdminEditProduct() {
 
     const updatedProduct = {
       name,
-      price,
+      price: Number(price),
       category,
       imageUrl,
     };
@@ -37,7 +37,7 @@ function AdminEditProduct() {
       alert("Product updated successfully!");
       navigate("/admin/products");
     } catch (err) {
-      console.error(err);
+      console.error("Update product error:", err);
       alert("Failed to update product");
     }
   };
@@ -92,6 +92,7 @@ function AdminEditProduct() {
 }
 
 export default AdminEditProduct;
+
 
 
 

@@ -6,8 +6,11 @@ import "./ProductList.css";
 import { BASE_URL } from "../config";
 
 function ProductList({ category, search }) {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState(() => {
+    const cached = localStorage.getItem("products");
+    return cached ? JSON.parse(cached) : [];
+  });
+
   const [selectedSizes, setSelectedSizes] = useState({});
   const [ratings, setRatings] = useState({});
   const [zoomImage, setZoomImage] = useState(null);
@@ -15,26 +18,30 @@ function ProductList({ category, search }) {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  // 🔹 Fetch products from LIVE backend
+  // 🔹 Background fetch (NO UI BLOCKING)
   useEffect(() => {
     axios
       .get(`${BASE_URL}/api/products`)
       .then((res) => {
-        setProducts(res.data);
-        setLoading(false);
+        const freshProducts = res.data || [];
+        setProducts(freshProducts);
+        localStorage.setItem("products", JSON.stringify(freshProducts));
       })
       .catch((err) => {
         console.error("Error loading products:", err);
-        setLoading(false);
       });
   }, []);
 
   // 🔹 Filters
   const filteredProducts = products.filter((p) => {
     const matchCategory =
-      !category || p.category?.toLowerCase() === category.toLowerCase();
+      !category ||
+      p.category?.toLowerCase().trim() === category.toLowerCase().trim();
+
     const matchSearch =
-      !search || p.name?.toLowerCase().includes(search.toLowerCase());
+      !search ||
+      p.name?.toLowerCase().includes(search.toLowerCase());
+
     return matchCategory && matchSearch;
   });
 
@@ -56,10 +63,6 @@ function ProductList({ category, search }) {
   const handleRatingClick = (productId, star) => {
     setRatings((prev) => ({ ...prev, [productId]: star }));
   };
-
-  if (loading) {
-    return <h3 style={{ textAlign: "center" }}>Loading products...</h3>;
-  }
 
   return (
     <>
@@ -103,13 +106,11 @@ function ProductList({ category, search }) {
               <div
                 className="image-wrapper zoomable"
                 onClick={() =>
-                  setZoomImage(
-                    product.imageUrl || product.image || "/no-image.png"
-                  )
+                  setZoomImage(product.imageUrl || "/no-image.png")
                 }
               >
                 <img
-                  src={product.imageUrl || product.image || "/no-image.png"}
+                  src={product.imageUrl || "/no-image.png"}
                   alt={product.name}
                 />
               </div>
@@ -165,9 +166,9 @@ function ProductList({ category, search }) {
                       id: product.id,
                       name: product.name,
                       price: product.price,
-                      image: product.image,
-                      imageUrl: product.imageUrl,
+                      image: product.imageUrl,
                       size: selectedSizes[product.id],
+                      quantity: 1,
                       rating: currentRating,
                     });
                   }}
@@ -189,8 +190,7 @@ function ProductList({ category, search }) {
                           id: product.id,
                           name: product.name,
                           price: product.price,
-                          image: product.image,
-                          imageUrl: product.imageUrl,
+                          image: product.imageUrl,
                           size: selectedSizes[product.id],
                           quantity: 1,
                           rating: currentRating,
@@ -211,6 +211,12 @@ function ProductList({ category, search }) {
 }
 
 export default ProductList;
+
+
+
+
+
+
 
 
 

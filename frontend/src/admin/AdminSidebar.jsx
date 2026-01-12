@@ -15,32 +15,19 @@ function AdminSidebar() {
         Dashboard
       </button>
 
-      <button
-        className="admin-link"
-        onClick={() => navigate("/admin/products")}
-      >
+      <button className="admin-link" onClick={() => navigate("/admin/products")}>
         Products
       </button>
 
-      <button
-        className="admin-link"
-        onClick={() => navigate("/admin/orders")}
-      >
+      <button className="admin-link" onClick={() => navigate("/admin/orders")}>
         Orders
       </button>
 
-      {/* 🛒 CLICKABLE CART PAGE */}
-      <button
-        className="admin-link"
-        onClick={() => navigate("/admin/cart")}
-      >
-        Products in Cart
+      <button className="admin-link" onClick={() => navigate("/admin/cart")}>
+        Products in Cart ({cart.length})
       </button>
 
-      <button
-        className="admin-link"
-        onClick={() => navigate("/products")}
-      >
+      <button className="admin-link" onClick={() => navigate("/products")}>
         Go to Shop
       </button>
 
@@ -58,6 +45,7 @@ function AdminSidebar() {
 }
 
 export default AdminSidebar;
+
 
 
 

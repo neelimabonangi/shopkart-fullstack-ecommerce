@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -17,13 +17,23 @@ import AdminOrders from "./admin/AdminOrders";
 import AdminAddProduct from "./admin/AdminAddProduct";
 import AdminEditProduct from "./admin/AdminEditProduct";
 import AdminOrderDetails from "./admin/AdminOrderDetails";
-import AdminCart from "./admin/AdminCart"; // ✅ ADD THIS
+import AdminCart from "./admin/AdminCart";
 
 function App() {
   const [category, setCategory] = useState(null);
   const [search, setSearch] = useState("");
+  const [isAdmin, setIsAdmin] = useState(null);
 
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  // 🔐 Safe admin check
+  useEffect(() => {
+    const adminFlag = localStorage.getItem("isAdmin");
+    setIsAdmin(adminFlag === "true");
+  }, []);
+
+  // ⏳ Prevent blank screen while checking admin
+  if (isAdmin === null) {
+    return <p style={{ padding: "20px" }}>Loading...</p>;
+  }
 
   return (
     <BrowserRouter>
@@ -81,7 +91,7 @@ function App() {
           element={isAdmin ? <AdminOrderDetails /> : <Navigate to="/login" />}
         />
 
-        {/* 🛡️ ADMIN CART PRODUCTS ✅ */}
+        {/* 🛡️ ADMIN CART */}
         <Route
           path="/admin/cart"
           element={isAdmin ? <AdminCart /> : <Navigate to="/login" />}
@@ -98,12 +108,17 @@ function App() {
           path="/admin/products/edit/:id"
           element={isAdmin ? <AdminEditProduct /> : <Navigate to="/login" />}
         />
+
+        {/* ❌ FALLBACK */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
+
+
 
 
 

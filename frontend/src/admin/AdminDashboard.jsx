@@ -1,29 +1,71 @@
-import { useContext, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CartContext } from "../context/CartContext";
+import axios from "axios";
 import AdminSidebar from "./AdminSidebar";
 import "./Admin.css";
+import { BASE_URL } from "../config";
 
 function AdminDashboard() {
-  const { orders, cart } = useContext(CartContext);
   const navigate = useNavigate();
+  const [authorized, setAuthorized] = useState(false);
+  const [orders, setOrders] = useState([]);
 
-  // 🔐 PROTECT ADMIN PAGE
+  // 🔐 Admin protection
   useEffect(() => {
     const isAdmin = localStorage.getItem("isAdmin");
-    if (isAdmin !== "true") {
+
+    if (isAdmin === "true") {
+      setAuthorized(true);
+    } else {
       navigate("/login");
     }
   }, [navigate]);
 
+  // 📦 Fetch orders
+  useEffect(() => {
+    axios
+      .get(`${BASE_URL}/api/orders`)
+      .then((res) => {
+        console.log("ORDERS:", res.data);
+        setOrders(res.data || []);
+      })
+      .catch((err) => console.error("Dashboard fetch error:", err));
+  }, []);
+
+  if (!authorized) {
+    return <p style={{ padding: "20px" }}>Checking admin access...</p>;
+  }
+
+  // ✅ Total Orders
   const totalOrders = orders.length;
 
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + (order.total || 0),
-    0
-  );
+  // ✅ Total Revenue (FIXED)
+  const totalRevenue = orders.reduce((sum, order) => {
+    // Use backend totalAmount if available
+    if (order?.totalAmount) {
+      return sum + Number(order.totalAmount);
+    }
 
-  const totalCartItems = cart.length;
+    // Otherwise calculate from items
+    const items = Array.isArray(order?.items) ? order.items : [];
+    const orderTotal = items.reduce(
+      (itemSum, item) =>
+        itemSum + Number(item?.price || 0) * Number(item?.quantity || 1),
+      0
+    );
+
+    return sum + orderTotal;
+  }, 0);
+
+  // ✅ Total Products Sold
+  const totalProductsSold = orders.reduce((sum, order) => {
+    const items = Array.isArray(order?.items) ? order.items : [];
+    const count = items.reduce(
+      (itemSum, item) => itemSum + Number(item?.quantity || 1),
+      0
+    );
+    return sum + count;
+  }, 0);
 
   return (
     <div className="admin-layout">
@@ -44,8 +86,8 @@ function AdminDashboard() {
           </div>
 
           <div className="admin-card">
-            <h3>Products in Cart</h3>
-            <p>{totalCartItems}</p>
+            <h3>Total Products Sold</h3>
+            <p>{totalProductsSold}</p>
           </div>
         </div>
       </div>
@@ -54,6 +96,13 @@ function AdminDashboard() {
 }
 
 export default AdminDashboard;
+
+
+
+
+
+
+
 
 
 

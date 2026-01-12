@@ -1,1 +1,4 @@
-export const BASE_URL = "https://shopkart-fullstack-ecommerce.onrender.com";
+export const BASE_URL = "http://localhost:8080";
+
+
+

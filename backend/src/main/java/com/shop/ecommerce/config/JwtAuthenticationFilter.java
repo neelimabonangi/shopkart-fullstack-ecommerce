@@ -18,7 +18,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    // Constructor injection
     public JwtAuthenticationFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
@@ -29,8 +28,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // ✅ SKIP JWT CHECK FOR LOGIN & SIGNUP APIs
-        if (request.getServletPath().startsWith("/api/auth")) {
+        String path = request.getServletPath();
+
+        // ✅ Skip public endpoints
+        if (
+                path.startsWith("/api/auth") ||
+                path.startsWith("/api/products") ||
+                path.equals("/") ||
+                path.equals("/error") ||
+                request.getMethod().equals("OPTIONS")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }

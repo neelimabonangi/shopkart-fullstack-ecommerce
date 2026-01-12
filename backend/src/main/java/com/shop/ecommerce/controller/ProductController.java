@@ -8,7 +8,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
-@CrossOrigin(origins = "*")
+@CrossOrigin(
+        origins = {
+                "http://localhost:5174",
+                "https://shopkart-ecommerce-fullstack.netlify.app"
+        },
+        allowedHeaders = "*",
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+        allowCredentials = "true"
+)
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -23,6 +31,7 @@ public class ProductController {
         return productRepository.findAll();
     }
 }
+
 
 
 

@@ -1,7 +1,7 @@
 server:
   port: 8080
 
-debug: true   # <-- Added debug mode
+debug: true
 
 spring:
   application:
@@ -21,7 +21,11 @@ spring:
 
   devtools:
     restart:
-      enabled: false
+      enabled: true
+    livereload:
+      enabled: true
+
+
 
 
 

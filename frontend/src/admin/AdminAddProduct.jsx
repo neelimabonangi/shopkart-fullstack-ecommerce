@@ -19,11 +19,16 @@ function AdminAddProduct() {
     e.preventDefault();
 
     try {
-      await axios.post(`${BASE_URL}/api/products`, product);
+      const payload = {
+        ...product,
+        price: Number(product.price),
+      };
+
+      await axios.post(`${BASE_URL}/api/products`, payload);
       alert("Product added successfully!");
       navigate("/admin/products");
     } catch (err) {
-      console.error(err);
+      console.error("Add product error:", err);
       alert("Failed to add product");
     }
   };
@@ -84,4 +89,5 @@ function AdminAddProduct() {
 }
 
 export default AdminAddProduct;
+
 

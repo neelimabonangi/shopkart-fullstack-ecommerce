@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 // ✅ Context
@@ -12,12 +11,9 @@ import "./styles/global.css";
 
 // 🔥 Mount React App
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    {/* Cart context available to entire app */}
-    <CartProvider>
-      <App />
-    </CartProvider>
-  </StrictMode>
+  <CartProvider>
+    <App />
+  </CartProvider>
 );
 
 

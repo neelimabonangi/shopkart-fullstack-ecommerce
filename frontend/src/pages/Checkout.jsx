@@ -65,23 +65,32 @@ function Checkout() {
       return;
     }
 
+    // ✅ FIXED PAYLOAD
     const orderData = {
-      items,
-      total: checkoutTotal,
+      items: items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        imageUrl: item.imageUrl || item.image || "",
+        size: item.size || null,
+      })),
+      totalAmount: checkoutTotal,          // ✅ FIX
       address,
-      paymentMethod,
+      paymentMode: paymentMethod,          // ✅ FIX
+      paymentStatus: "PENDING",            // ✅ ADD
+      orderStatus: "PLACED",               // ✅ ADD
       upiApp: paymentMethod === "UPI" ? upiApp : null,
       upiId: paymentMethod === "UPI" ? upiId : null,
-      date: new Date().toLocaleString(),
     };
 
     try {
       await axios.post(`${BASE_URL}/api/orders`, orderData);
       setOrderPlaced(true);
-      clearCart && clearCart();
+      clearCart();
     } catch (err) {
-      console.error(err);
-      alert("Failed to place order");
+      console.error("Order failed:", err);
+      alert("Failed to place the order. Please try again.");
     }
   };
 
@@ -147,7 +156,7 @@ function Checkout() {
           }}
         >
           <img
-            src={item.imageUrl || "/no-image.png"}
+            src={item.imageUrl || item.image || "/no-image.png"}
             alt={item.name}
             style={{
               width: "90px",
@@ -241,6 +250,9 @@ function Checkout() {
 }
 
 export default Checkout;
+
+
+
 
 
 
