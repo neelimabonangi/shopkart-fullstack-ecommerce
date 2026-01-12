@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${PORT:8000}
 
 debug: true
 
@@ -27,6 +27,7 @@ spring:
       enabled: true
     livereload:
       enabled: true
+
 
 
 
