@@ -1,6 +1,8 @@
 import { createContext, useState, useEffect } from "react";
 import axios from "axios";
-import { BASE_URL } from "../config";
+
+// Base URL for backend (Render)
+const BASE_URL = "https://shopkart-fullstack-ecommerce.onrender.com";
 
 export const CartContext = createContext();
 
@@ -83,6 +85,7 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
+
 
 
 

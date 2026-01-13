@@ -3,7 +3,9 @@ import axios from "axios";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import "./ProductList.css";
-import { BASE_URL } from "../config";
+
+// Backend Base URL (Render)
+const BASE_URL = "https://shopkart-fullstack-ecommerce.onrender.com";
 
 function ProductList({ category, search }) {
   const [products, setProducts] = useState(() => {
@@ -18,7 +20,7 @@ function ProductList({ category, search }) {
   const { addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
-  // 🔹 Background fetch (NO UI BLOCKING)
+  // 🔹 Fetch products
   useEffect(() => {
     axios
       .get(`${BASE_URL}/api/products`)
@@ -211,6 +213,7 @@ function ProductList({ category, search }) {
 }
 
 export default ProductList;
+
 
 
 
