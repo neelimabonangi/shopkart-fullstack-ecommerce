@@ -5,6 +5,16 @@ The project is built with **React (Frontend)** and **Spring Boot (Backend)** and
 
 ---
 
+## 🚀 Live Deployment
+
+### Frontend (Netlify)
+🔗 https://shopkart-ecommerce-fullstack.netlify.app/
+
+### Backend (Render)
+🔗 https://shopkart-fullstack-ecommerce.onrender.com
+
+---
+
 ## 🛠️ Tech Stack
 
 ### Frontend
