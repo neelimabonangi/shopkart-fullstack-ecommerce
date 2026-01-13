@@ -1,17 +1,21 @@
-# Use Java 17 image
+# =========================
+# Build stage
+# =========================
+FROM maven:3.9.6-eclipse-temurin-17 AS build
+
+WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
+
+# =========================
+# Run stage
+# =========================
 FROM eclipse-temurin:17-jdk
 
-# Set working directory
 WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 
-# Copy everything
-COPY . .
-
-# Build the application
-RUN ./mvnw clean package -DskipTests || mvn clean package -DskipTests
-
-# Expose port
 EXPOSE 8080
 
-# Run the app
-CMD ["java", "-jar", "target/ecommerce-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]
+
