@@ -2,16 +2,14 @@ server:
   port: ${PORT:8080}
   address: 0.0.0.0
 
-debug: true
-
 spring:
   application:
     name: ecommerce
 
   datasource:
-    url: jdbc:postgresql://ep-blue-butterfly-ahulb36a-pooler.c-3.us-east-1.aws.neon.tech:5432/neondb?sslmode=require&channel_binding=require
-    username: neondb_owner
-    password: npg_qfzvpV1HxLT0
+    url: jdbc:postgresql://dpg-d5gvuba4d50c738n993g-a.virginia-postgres.render.com:5432/shopkart_db_3eav
+    username: shopkart_db_3eav_user
+    password: 8U0dixUwqwJqj2ebwJi4ALgK1FdRsk00
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,15 +17,7 @@ spring:
       ddl-auto: update
     show-sql: true
     open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-  devtools:
-    restart:
-      enabled: true
-    livereload:
-      enabled: true
 
 
 
