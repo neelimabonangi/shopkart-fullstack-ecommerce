@@ -7,7 +7,7 @@ spring:
     name: ecommerce
 
   datasource:
-    url: jdbc:postgresql://aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres
+    url: postgresql://postgres.qegvujunggqjtvvjrehm:Supabase2025DbPass@aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres
     username: postgres.qegvujunggqjtvvjrehm
     password: Supabase2025DbPass
     driver-class-name: org.postgresql.Driver
