@@ -2,7 +2,6 @@ package com.shop.ecommerce.controller;
 
 import com.shop.ecommerce.entity.Order;
 import com.shop.ecommerce.repository.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public OrderController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
+    }
 
     // ✅ Create Order
     @PostMapping
@@ -26,10 +28,9 @@ public class OrderController {
         return orderRepository.findAll();
     }
 
-    // ✅ Get Order by ID (for refresh-safe admin)
+    // ✅ Get Order by ID
     @GetMapping("/{id}")
     public Order getOrderById(@PathVariable Long id) {
         return orderRepository.findById(id).orElse(null);
     }
 }
-

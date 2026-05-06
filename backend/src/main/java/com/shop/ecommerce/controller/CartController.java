@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cart")
-@CrossOrigin(origins = "http://localhost:5173")
 public class CartController {
 
     private final CartRepository cartRepository;
@@ -18,19 +17,18 @@ public class CartController {
         this.cartRepository = cartRepository;
     }
 
-    // ---------------- ADD TO CART ----------------
+    // ✅ Add to Cart
     @PostMapping
     public CartItem addToCart(@RequestBody CartItem cartItem,
-                              Authentication authentication) {
+                             Authentication authentication) {
 
-        // email comes from JWT
         String email = authentication.getName();
         cartItem.getUser().setEmail(email);
 
         return cartRepository.save(cartItem);
     }
 
-    // ---------------- GET CART (JWT BASED) ----------------
+    // ✅ Get Cart
     @GetMapping
     public List<CartItem> getCart(Authentication authentication) {
 
@@ -38,13 +36,13 @@ public class CartController {
         return cartRepository.findByUserEmail(email);
     }
 
-    // ---------------- REMOVE ITEM ----------------
+    // ✅ Remove Item
     @DeleteMapping("/{id}")
     public void removeItem(@PathVariable Long id) {
         cartRepository.deleteById(id);
     }
 
-    // ---------------- CLEAR CART ----------------
+    // ✅ Clear Cart
     @DeleteMapping("/clear")
     public void clearCart(Authentication authentication) {
 

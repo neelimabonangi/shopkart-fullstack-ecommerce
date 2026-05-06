@@ -2,6 +2,7 @@ package com.shop.ecommerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -31,13 +32,19 @@ public class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
             .authorizeHttpRequests(auth -> auth
+                // Public APIs
                 .requestMatchers(
-                        "/",                   
+                        "/",
                         "/error",
-                        "/api/auth/**",        
+                        "/api/auth/**",
                         "/api/products/**",
                         "/api/orders/**"
                 ).permitAll()
+
+                // Allow preflight requests
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Secure remaining APIs
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
@@ -48,26 +55,26 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // ✅ FIXED CORS CONFIGURATION
+    // Global CORS configuration
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Allow all origins safely (with credentials)
-        config.setAllowedOriginPatterns(List.of("*"));   // ✅ IMPORTANT FIX
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:5173",
+                "https://shopkart-ecommerce-fullstack.netlify.app"
+        ));
 
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedMethods(List.of("*"));   // ✅ FIXED
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 }
-
-
-
 
 
 
