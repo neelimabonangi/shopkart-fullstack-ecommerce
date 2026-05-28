@@ -62,6 +62,7 @@ public class SecurityConfig {
 
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:5173",
+                "http://localhost:5174",
                 "https://shopkart-ecommerce-fullstack.netlify.app"
         ));
 
