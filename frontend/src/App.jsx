@@ -1,16 +1,28 @@
-import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  useState
+} from "react";
 
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate
+} from "react-router-dom";
+
+// ✅ COMPONENTS
 import Navbar from "./components/Navbar";
 import HeroBanner from "./components/HeroBanner";
+
+// ✅ PAGES
 import ProductList from "./pages/ProductList";
+import ProductDetails from "./pages/ProductDetails";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 
-// ✅ ADMIN PAGES
+// ✅ ADMIN
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminProducts from "./admin/AdminProducts";
 import AdminOrders from "./admin/AdminOrders";
@@ -20,24 +32,37 @@ import AdminOrderDetails from "./admin/AdminOrderDetails";
 import AdminCart from "./admin/AdminCart";
 
 function App() {
-  const [category, setCategory] = useState(null);
-  const [search, setSearch] = useState("");
-  const [isAdmin, setIsAdmin] = useState(null);
 
-  // 🔐 Safe admin check
-  useEffect(() => {
-    const adminFlag = localStorage.getItem("isAdmin");
-    setIsAdmin(adminFlag === "true");
-  }, []);
+  // ✅ CATEGORY
+  const [category,
+    setCategory] =
+    useState("All");
 
-  // ⏳ Prevent blank screen while checking admin
-  if (isAdmin === null) {
-    return <p style={{ padding: "20px" }}>Loading...</p>;
-  }
+  // ✅ SEARCH
+  const [search,
+    setSearch] =
+    useState("");
+
+  // ✅ GET USER
+  const loggedInUser =
+
+    JSON.parse(
+      localStorage.getItem(
+        "loggedInUser"
+      )
+    );
+
+  // ✅ ADMIN CHECK
+  const isAdmin =
+
+    loggedInUser?.role ===
+    "admin";
 
   return (
+
     <BrowserRouter>
-      {/* 🔵 NAVBAR */}
+
+      {/* ✅ NAVBAR */}
       <Navbar
         search={search}
         setSearch={setSearch}
@@ -45,73 +70,167 @@ function App() {
       />
 
       <Routes>
-        {/* 🏠 HOME */}
-        <Route path="/" element={<HeroBanner />} />
 
-        {/* 🛍️ PRODUCTS */}
+        {/* ✅ HOME */}
+        <Route
+          path="/"
+          element={
+            <HeroBanner />
+          }
+        />
+
+        {/* ✅ PRODUCTS */}
         <Route
           path="/products"
-          element={<ProductList category={category} search={search} />}
+          element={
+            <ProductList
+              category={category}
+              search={search}
+            />
+          }
         />
 
-        {/* 🔐 AUTH */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        {/* ✅ PRODUCT DETAILS */}
+        <Route
+          path="/product/:id"
+          element={
+            <ProductDetails />
+          }
+        />
 
-        {/* 🛒 CART */}
-        <Route path="/cart" element={<Cart />} />
+        {/* ✅ LOGIN */}
+        <Route
+          path="/login"
+          element={<Login />}
+        />
 
-        {/* 💳 CHECKOUT */}
-        <Route path="/checkout" element={<Checkout />} />
+        {/* ✅ SIGNUP */}
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
 
-        {/* 🧾 USER ORDERS */}
-        <Route path="/orders" element={<Orders />} />
+        {/* ✅ CART */}
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
 
-        {/* 🛡️ ADMIN DASHBOARD */}
+        {/* ✅ CHECKOUT */}
+        <Route
+          path="/checkout"
+          element={<Checkout />}
+        />
+
+        {/* ✅ USER ORDERS */}
+        <Route
+          path="/orders"
+          element={<Orders />}
+        />
+
+        {/* ================= ADMIN ================= */}
+
+        {/* ✅ ADMIN DASHBOARD */}
         <Route
           path="/admin"
-          element={isAdmin ? <AdminDashboard /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminDashboard />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ ADMIN PRODUCTS */}
+        {/* ✅ ADMIN PRODUCTS */}
         <Route
           path="/admin/products"
-          element={isAdmin ? <AdminProducts /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminProducts />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ ADMIN ORDERS */}
+        {/* ✅ ADMIN ORDERS */}
         <Route
           path="/admin/orders"
-          element={isAdmin ? <AdminOrders /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminOrders />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ ADMIN ORDER DETAILS */}
+        {/* ✅ ADMIN ORDER DETAILS */}
         <Route
           path="/admin/orders/:id"
-          element={isAdmin ? <AdminOrderDetails /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminOrderDetails />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ ADMIN CART */}
+        {/* ✅ ADMIN CART */}
         <Route
           path="/admin/cart"
-          element={isAdmin ? <AdminCart /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminCart />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ ADD PRODUCT */}
+        {/* ✅ ADMIN ADD PRODUCT */}
         <Route
           path="/admin/add-product"
-          element={isAdmin ? <AdminAddProduct /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminAddProduct />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* 🛡️ EDIT PRODUCT */}
+        {/* ✅ ADMIN EDIT PRODUCT */}
         <Route
           path="/admin/products/edit/:id"
-          element={isAdmin ? <AdminEditProduct /> : <Navigate to="/login" />}
+          element={
+
+            isAdmin
+
+              ? <AdminEditProduct />
+
+              : <Navigate to="/login" />
+          }
         />
 
-        {/* ❌ FALLBACK */}
-        <Route path="*" element={<Navigate to="/" />} />
+        {/* ✅ FALLBACK */}
+        <Route
+          path="*"
+          element={
+            <Navigate to="/" />
+          }
+        />
+
       </Routes>
+
     </BrowserRouter>
   );
 }

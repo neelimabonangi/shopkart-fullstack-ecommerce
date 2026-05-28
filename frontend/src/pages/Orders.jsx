@@ -1,100 +1,226 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { BASE_URL } from "../config";
+import {
+  useEffect,
+  useState
+} from "react";
 
 function Orders() {
-  const [orders, setOrders] = useState([]);
+
+  const [orders,
+    setOrders] =
+    useState([]);
 
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/api/orders`)
-      .then((res) => setOrders(res.data))
-      .catch((err) => console.error(err));
+
+    const savedOrders =
+
+      JSON.parse(
+        localStorage.getItem(
+          "orders"
+        )
+      ) || [];
+
+    console.log(
+      "ORDERS:",
+      savedOrders
+    );
+
+    setOrders(savedOrders);
+
   }, []);
 
-  if (!orders || orders.length === 0) {
+  if (orders.length === 0) {
+
     return (
-      <div style={{ padding: "30px", textAlign: "center" }}>
-        <h2>No orders yet</h2>
-        <p>Place an order to see it here</p>
+
+      <div
+        style={{
+          textAlign:
+            "center",
+          marginTop:
+            "80px"
+        }}
+      >
+
+        <h1>
+          No orders yet
+        </h1>
+
+        <p>
+          Place an order to see it here
+        </p>
+
       </div>
+
     );
   }
 
   return (
-    <div style={{ padding: "30px", maxWidth: "1100px", margin: "auto" }}>
-      <h2 style={{ marginBottom: "20px" }}>My Orders</h2>
 
-      {orders.map((order, index) => (
+    <div
+      style={{
+        padding: "30px",
+        maxWidth:
+          "1100px",
+        margin: "auto"
+      }}
+    >
+
+      <h1
+        style={{
+          marginBottom:
+            "30px"
+        }}
+      >
+        Order History Details
+      </h1>
+
+      {orders.map((
+        order,
+        orderIndex
+      ) => (
+
         <div
-          key={order.id || index}
+          key={orderIndex}
           style={{
-            background: "#f7f7f7",
-            borderRadius: "10px",
-            padding: "24px",
-            marginBottom: "24px",
+            background:
+              "white",
+
+            padding:
+              "25px",
+
+            borderRadius:
+              "12px",
+
+            marginBottom:
+              "30px",
+
+            boxShadow:
+              "0 2px 10px rgba(0,0,0,0.08)"
           }}
         >
-          <div
+
+          <h2>
+            Order #
+            {orderIndex + 1}
+          </h2>
+
+          <p>
+            {
+              order.orderDate
+            }
+          </p>
+
+          <h2
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "30px",
+              color:
+                "green"
             }}
           >
-            <div style={{ flex: 1 }}>
-              <h4 style={{ marginBottom: "8px" }}>
-                Order #{index + 1}
-              </h4>
+            ₹{order.total}
+          </h2>
 
-              <p>
-                <strong>Total:</strong> ₹{order.total}
-              </p>
-              <p>
-                <strong>Payment:</strong> {order.paymentMethod}
-              </p>
-              <p style={{ fontSize: "13px", color: "#555" }}>
-                Ordered on: {order.date}
-              </p>
-
-              {order.items.map((item, i) => (
-                <div key={i} style={{ marginTop: "14px" }}>
-                  <p style={{ fontWeight: "600", fontSize: "16px" }}>
-                    {item.name}
-                  </p>
-                  {item.size && <p>Size: {item.size}</p>}
-                  <p>Quantity: {item.quantity}</p>
-                  <p>Price: ₹{item.price}</p>
-                </div>
-              ))}
-            </div>
+          {order.items.map((
+            item,
+            index
+          ) => (
 
             <div
+              key={index}
               style={{
-                width: "280px",
-                display: "flex",
-                justifyContent: "center",
+                display:
+                  "flex",
+
+                gap: "20px",
+
+                marginTop:
+                  "20px",
+
+                borderTop:
+                  "1px solid #eee",
+
+                paddingTop:
+                  "20px"
               }}
             >
+
               <img
                 src={
-                  order.items[0].imageUrl ||
-                  order.items[0].image ||
-                  "/no-image.png"
+                  item.imageUrl ||
+
+                  item.image
                 }
-                alt={order.items[0].name}
+
+                alt={
+                  item.name
+                }
+
                 style={{
-                  width: "100%",
-                  height: "340px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
+                  width:
+                    "140px",
+
+                  height:
+                    "170px",
+
+                  objectFit:
+                    "cover",
+
+                  borderRadius:
+                    "10px"
                 }}
               />
+
+              <div>
+
+                <h2>
+                  {item.name}
+                </h2>
+
+                <p>
+                  ₹{item.price}
+                </p>
+
+                <p>
+                  Quantity:
+                  {" "}
+                  {
+                    item.quantity
+                  }
+                </p>
+
+                <p>
+                  Size:
+                  {" "}
+                  {
+                    item.selectedSize ||
+
+                    item.size ||
+
+                    "M"
+                  }
+                </p>
+
+                <p
+                  style={{
+                    color:
+                      "green",
+
+                    fontWeight:
+                      "bold"
+                  }}
+                >
+                  Delivered ✅
+                </p>
+
+              </div>
+
             </div>
-          </div>
+
+          ))}
+
         </div>
+
       ))}
+
     </div>
   );
 }

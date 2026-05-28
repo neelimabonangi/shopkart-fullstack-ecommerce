@@ -1,92 +1,441 @@
-import { createContext, useState, useEffect } from "react";
+import {
+  createContext,
+  useState,
+  useEffect
+} from "react";
+
 import axios from "axios";
 
-// Base URL for backend (Render)
-const BASE_URL = "https://shopkart-fullstack-ecommerce.onrender.com";
+// ✅ BACKEND URL
+const BASE_URL =
+  "http://localhost:8080";
 
-export const CartContext = createContext();
+// ✅ CONTEXT
+export const CartContext =
+  createContext();
 
-export function CartProvider({ children }) {
-  const [cart, setCart] = useState(() => {
-    try {
-      const savedCart = localStorage.getItem("cart");
-      return savedCart ? JSON.parse(savedCart) : [];
-    } catch (e) {
-      console.error("Cart load error:", e);
-      return [];
-    }
-  });
+// ✅ PROVIDER
+export function CartProvider({
+  children
+}) {
 
-  const [orders, setOrders] = useState([]);
+  // ✅ CART STATE
+  const [cart,
+    setCart] =
+    useState(() => {
 
+      try {
+
+        const savedCart =
+          localStorage.getItem(
+            "cart"
+          );
+
+        return savedCart
+
+          ? JSON.parse(savedCart)
+
+          : [];
+
+      } catch (e) {
+
+        console.error(
+          "Cart load error:",
+          e
+        );
+
+        return [];
+
+      }
+    });
+
+  // ✅ ORDERS
+  const [orders,
+    setOrders] =
+    useState([]);
+
+  // ✅ SAVE CART
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+
+    localStorage.setItem(
+
+      "cart",
+
+      JSON.stringify(cart)
+
+    );
+
   }, [cart]);
 
+  // ✅ FETCH ORDERS
   useEffect(() => {
+
     axios
-      .get(`${BASE_URL}/api/orders`)
-      .then((res) => setOrders(res.data || []))
-      .catch((err) => console.error("Fetch orders error:", err));
+      .get(
+        `${BASE_URL}/api/orders`
+      )
+
+      .then((res) => {
+
+        setOrders(
+          res.data || []
+        );
+
+      })
+
+      .catch((err) => {
+
+        console.error(
+          "Fetch orders error:",
+          err
+        );
+
+      });
+
   }, []);
 
-  const addToCart = (product) => {
-    if (!product || product.id == null) return;
+  // ✅ ADD TO CART
+  const addToCart =
+    (product) => {
+
+    if (
+      !product ||
+      product.id == null
+    ) {
+
+      return;
+    }
 
     setCart((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      if (exists) return prev;
-      return [...prev, { ...product, quantity: 1 }];
+
+      // ✅ CHECK SAME PRODUCT + SIZE
+      const existingItem =
+        prev.find(
+          (item) =>
+
+            item.id ===
+            product.id
+
+            &&
+
+            item.selectedSize ===
+            product.selectedSize
+        );
+
+      // ✅ IF EXISTS
+      if (existingItem) {
+
+        return prev.map(
+          (item) =>
+
+            item.id ===
+            product.id
+
+            &&
+
+            item.selectedSize ===
+            product.selectedSize
+
+              ? {
+
+                  ...item,
+
+                  quantity:
+                    item.quantity + 1
+                }
+
+              : item
+        );
+      }
+
+      // ✅ NEW PRODUCT
+      return [
+
+        ...prev,
+
+        {
+          ...product,
+
+          quantity: 1
+        }
+      ];
     });
+
+    alert(
+      "✅ Added To Cart"
+    );
   };
 
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  // ✅ REMOVE ITEM
+  const removeFromCart =
+    (
+      id,
+      selectedSize
+    ) => {
+
+    setCart((prev) =>
+
+      prev.filter(
+        (item) =>
+
+          !(
+
+            item.id === id
+
+            &&
+
+            item.selectedSize ===
+            selectedSize
+          )
+      )
+    );
   };
 
-  const clearCart = () => {
+  // ✅ INCREASE QUANTITY
+  const increaseQuantity =
+    (
+      id,
+      selectedSize
+    ) => {
+
+    setCart((prev) =>
+
+      prev.map(
+        (item) => {
+
+          if (
+
+            item.id === id
+
+            &&
+
+            item.selectedSize ===
+            selectedSize
+
+          ) {
+
+            return {
+
+              ...item,
+
+              quantity:
+                item.quantity + 1
+            };
+          }
+
+          return item;
+        }
+      )
+    );
+  };
+
+  // ✅ DECREASE QUANTITY
+  const decreaseQuantity =
+    (
+      id,
+      selectedSize
+    ) => {
+
+    setCart((prev) =>
+
+      prev.map(
+        (item) => {
+
+          if (
+
+            item.id === id
+
+            &&
+
+            item.selectedSize ===
+            selectedSize
+
+          ) {
+
+            return {
+
+              ...item,
+
+              quantity:
+
+                item.quantity > 1
+
+                  ? item.quantity - 1
+
+                  : 1
+            };
+          }
+
+          return item;
+        }
+      )
+    );
+  };
+
+  // ✅ CLEAR CART
+  const clearCart =
+    () => {
+
     setCart([]);
+
   };
 
-  const placeOrder = async (orderData) => {
-    if (!orderData || !orderData.items || orderData.items.length === 0) return;
+  // ✅ PLACE ORDER
+  const placeOrder =
+    async (
+      orderData
+    ) => {
+
+    if (
+
+      !orderData ||
+
+      !orderData.items ||
+
+      orderData.items.length === 0
+
+    ) {
+
+      alert(
+        "No items in order"
+      );
+
+      return;
+    }
 
     try {
-      const res = await axios.post(`${BASE_URL}/api/orders`, orderData);
-      setOrders((prev) => [...prev, res.data]);
+
+      // ✅ SAVE ORDER
+      const res =
+        await axios.post(
+
+          `${BASE_URL}/api/orders`,
+
+          orderData
+        );
+
+      // ✅ UPDATE ORDERS
+      setOrders((prev) => [
+
+        ...prev,
+
+        res.data
+
+      ]);
+
+      // ✅ SAVE ADMIN HISTORY
+      const existingOrders =
+
+        JSON.parse(
+          localStorage.getItem(
+            "allOrders"
+          )
+        ) || [];
+
+      localStorage.setItem(
+
+        "allOrders",
+
+        JSON.stringify([
+
+          ...existingOrders,
+
+          res.data
+        ])
+      );
+
+      // ✅ CLEAR CART
       clearCart();
+
+      // ✅ SUCCESS
+      alert(
+        "✅ Order Placed Successfully"
+      );
+
     } catch (err) {
-      console.error("Order failed:", err);
-      alert("Order failed");
+
+      console.error(
+        "Order failed:",
+        err
+      );
+
+      alert(
+        "❌ Failed to place order"
+      );
+
     }
   };
 
-  const totalItems = cart.length;
+  // ✅ TOTAL ITEMS
+  const totalItems =
 
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.price * (item.quantity || 1),
-    0
-  );
+    cart.reduce(
+
+      (sum, item) =>
+
+        sum +
+        (
+          item.quantity || 1
+        ),
+
+      0
+    );
+
+  // ✅ TOTAL PRICE
+  const totalPrice =
+
+    cart.reduce(
+
+      (sum, item) =>
+
+        sum +
+
+        (
+          item.price *
+          (
+            item.quantity || 1
+          )
+        ),
+
+      0
+    );
 
   return (
+
     <CartContext.Provider
+
       value={{
+
         cart,
+
+        setCart,
+
         orders,
+
         addToCart,
+
         removeFromCart,
+
+        increaseQuantity,
+
+        decreaseQuantity,
+
         clearCart,
+
         placeOrder,
+
         totalItems,
-        totalPrice,
+
+        totalPrice
+
       }}
     >
+
       {children}
+
     </CartContext.Provider>
   );
 }
-
-
 
 
 

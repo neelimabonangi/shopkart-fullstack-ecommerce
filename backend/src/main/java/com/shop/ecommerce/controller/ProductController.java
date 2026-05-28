@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductRepository productRepository;
@@ -20,6 +21,12 @@ public class ProductController {
     @GetMapping
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    // ✅ ADD PRODUCT
+    @PostMapping
+    public Product addProduct(@RequestBody Product product) {
+        return productRepository.save(product);
     }
 }
 

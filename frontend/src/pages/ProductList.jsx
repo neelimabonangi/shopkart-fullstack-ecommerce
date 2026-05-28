@@ -1,221 +1,668 @@
-import { useEffect, useState, useContext } from "react";
+import React,
+{
+  useEffect,
+  useState,
+  useContext
+} from "react";
+
 import axios from "axios";
-import { CartContext } from "../context/CartContext";
-import { useNavigate } from "react-router-dom";
-import "./ProductList.css";
 
-// Backend Base URL (Render)
-const BASE_URL = "https://shopkart-fullstack-ecommerce.onrender.com";
+import {
+  useNavigate
+} from "react-router-dom";
 
-function ProductList({ category, search }) {
-  const [products, setProducts] = useState(() => {
-    const cached = localStorage.getItem("products");
-    return cached ? JSON.parse(cached) : [];
-  });
+import {
+  CartContext
+} from "../context/CartContext";
 
-  const [selectedSizes, setSelectedSizes] = useState({});
-  const [ratings, setRatings] = useState({});
-  const [zoomImage, setZoomImage] = useState(null);
+function ProductList({
+  category,
+  search
+}) {
 
-  const { addToCart } = useContext(CartContext);
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  // 🔹 Fetch products
+  // ✅ CART CONTEXT
+  const {
+    addToCart
+  } = useContext(
+    CartContext
+  );
+
+  // ✅ PRODUCTS
+  const [products,
+    setProducts] =
+    useState([]);
+
+  // ✅ LOADING
+  const [loading,
+    setLoading] =
+    useState(true);
+
+  // ✅ ERROR
+  const [error,
+    setError] =
+    useState(null);
+
+  // ✅ SIZE
+  const [selectedSizes,
+    setSelectedSizes] =
+    useState({});
+
+  // ✅ RATINGS
+  const [userRatings,
+    setUserRatings] =
+    useState({});
+
+  // ✅ API
+  const API_URL =
+    "http://localhost:8080/api/products";
+
+  // ✅ FETCH PRODUCTS
   useEffect(() => {
+
     axios
-      .get(`${BASE_URL}/api/products`)
+      .get(API_URL)
+
       .then((res) => {
-        const freshProducts = res.data || [];
-        setProducts(freshProducts);
-        localStorage.setItem("products", JSON.stringify(freshProducts));
+
+        setProducts(
+          res.data
+        );
+
+        setLoading(false);
+
       })
+
       .catch((err) => {
-        console.error("Error loading products:", err);
+
+        console.error(err);
+
+        setError(
+          "Failed to load products"
+        );
+
+        setLoading(false);
+
       });
+
   }, []);
 
-  // 🔹 Filters
-  const filteredProducts = products.filter((p) => {
-    const matchCategory =
-      !category ||
-      p.category?.toLowerCase().trim() === category.toLowerCase().trim();
+  // ✅ CATEGORY FILTER
+  const filteredProducts =
 
-    const matchSearch =
-      !search ||
-      p.name?.toLowerCase().includes(search.toLowerCase());
+    category === "All" ||
+    !category
 
-    return matchCategory && matchSearch;
-  });
+      ? products
 
-  const getBaseRating = (product) =>
-    ratings[product.id] ??
-    Number(((product.id % 5) + 1 + Math.random()).toFixed(1));
+      : products.filter(
+          (item) =>
 
-  const getRatingCount = (product) =>
-    product.ratingCount ?? 120 + product.id * 9;
+            item.category
+              ?.toLowerCase()
 
-  const hasFreeDelivery = (product) =>
-    product.freeDelivery ?? product.id % 2 === 0;
+              ===
 
-  const getDiscount = (product) => {
-    const discounts = [10, 20, 30, 40, 50, 60, 70];
-    return product.discount ?? discounts[product.id % discounts.length];
+            category
+              ?.toLowerCase()
+        );
+
+  // ✅ SEARCH FILTER
+  const finalProducts =
+    filteredProducts.filter(
+      (item) =>
+
+        item.name
+          ?.toLowerCase()
+
+          .includes(
+            search?.toLowerCase() || ""
+          )
+    );
+
+  // ✅ RATINGS
+  const ratings = [
+    3.5,
+    3.8,
+    4.0,
+    4.2,
+    4.5,
+    4.7
+  ];
+
+  // ✅ DISCOUNTS
+  const discounts = [
+    "40% OFF",
+    "50% OFF",
+    "60% OFF",
+    "70% OFF",
+    "80% OFF"
+  ];
+
+  // ✅ ADD TO CART
+  const handleAddToCart =
+    (product) => {
+
+    addToCart(product);
+
   };
 
-  const handleRatingClick = (productId, star) => {
-    setRatings((prev) => ({ ...prev, [productId]: star }));
+  // ✅ BUY NOW
+  const handleBuyNow =
+    (product) => {
+
+    navigate(
+      "/checkout",
+      {
+        state: {
+          buyNowProduct: {
+            ...product,
+            quantity: 1
+          }
+        }
+      }
+    );
   };
+
+  // ✅ LOADING
+  if (loading) {
+
+    return (
+
+      <h2
+        style={{
+          textAlign:
+            "center",
+          marginTop:
+            "50px"
+        }}
+      >
+        Loading products...
+      </h2>
+
+    );
+  }
+
+  // ✅ ERROR
+  if (error) {
+
+    return (
+
+      <h2
+        style={{
+          textAlign:
+            "center",
+          marginTop:
+            "50px",
+          color: "red"
+        }}
+      >
+        {error}
+      </h2>
+
+    );
+  }
+
+  // ✅ EMPTY
+  if (
+    finalProducts.length === 0
+  ) {
+
+    return (
+
+      <h2
+        style={{
+          textAlign:
+            "center",
+          marginTop:
+            "50px"
+        }}
+      >
+        No products found
+      </h2>
+
+    );
+  }
 
   return (
-    <>
-      {/* 🔍 IMAGE ZOOM */}
-      {zoomImage && (
-        <div className="zoom-overlay" onClick={() => setZoomImage(null)}>
-          <div className="zoom-content" onClick={(e) => e.stopPropagation()}>
-            <span className="zoom-close" onClick={() => setZoomImage(null)}>
-              ✕
-            </span>
-            <img src={zoomImage} alt="Zoomed product" />
-          </div>
-        </div>
-      )}
 
-      <div className="products-container">
-        {filteredProducts.map((product) => {
-          const currentRating = getBaseRating(product);
+    <div
+      style={{
+        padding: "20px"
+      }}
+    >
 
-          return (
-            <div key={product.id} className="product-card">
-              <div className="rating-container">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <span
-                    key={star}
-                    className={
-                      Math.round(currentRating) >= star
-                        ? "star filled"
-                        : "star"
-                    }
-                    onClick={() => handleRatingClick(product.id, star)}
-                  >
-                    ★
-                  </span>
-                ))}
-                <span className="rating-text">
-                  {currentRating} | {getRatingCount(product)}
-                </span>
-              </div>
+      {/* GRID */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(3, 1fr)",
+          gap: "25px"
+        }}
+      >
+
+        {finalProducts.map(
+          (item, index) => {
+
+            const randomRating =
+              ratings[
+                index %
+                ratings.length
+              ];
+
+            const randomDiscount =
+              discounts[
+                index %
+                discounts.length
+              ];
+
+            return (
 
               <div
-                className="image-wrapper zoomable"
-                onClick={() =>
-                  setZoomImage(product.imageUrl || "/no-image.png")
-                }
+                key={item.id}
+
+                style={{
+                  border:
+                    "1px solid #ddd",
+                  borderRadius:
+                    "12px",
+                  padding:
+                    "15px",
+                  background:
+                    "white",
+                  boxShadow:
+                    "0 2px 10px rgba(0,0,0,0.08)"
+                }}
               >
-                <img
-                  src={product.imageUrl || "/no-image.png"}
-                  alt={product.name}
-                />
-              </div>
 
-              <h4>{product.name}</h4>
+                {/* IMAGE */}
+                <div
+                  onClick={() =>
+                    navigate(
+                      `/product/${item.id}`
+                    )
+                  }
 
-              <p className="price">
-                ₹{product.price}
-                <span className="discount">
-                  {" "}
-                  {getDiscount(product)}% off
-                </span>
-              </p>
+                  style={{
+                    overflow:
+                      "hidden",
+                    borderRadius:
+                      "10px",
+                    cursor:
+                      "pointer"
+                  }}
+                >
 
-              {hasFreeDelivery(product) && (
-                <p className="delivery">Free Delivery</p>
-              )}
+                  <img
+                    src={
+                      item.imageUrl ||
+                      item.image
+                    }
 
-              <div className="size-section">
-                <span className="size-label">Select Size</span>
-                <div className="size-options">
-                  {["S", "M", "L", "XL", "XXL"].map((size) => (
-                    <button
-                      key={size}
-                      className={
-                        selectedSizes[product.id] === size
-                          ? "size-btn active"
-                          : "size-btn"
-                      }
-                      onClick={() =>
-                        setSelectedSizes((prev) => ({
-                          ...prev,
-                          [product.id]: size,
-                        }))
-                      }
-                    >
-                      {size}
-                    </button>
-                  ))}
+                    alt={
+                      item.name
+                    }
+
+                    style={{
+                      width:
+                        "100%",
+                      height:
+                        "350px",
+                      objectFit:
+                        "cover",
+                      borderRadius:
+                        "10px",
+                      transition:
+                        "0.4s ease"
+                    }}
+
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.transform =
+                        "scale(1.12)";
+                    }}
+
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.transform =
+                        "scale(1)";
+                    }}
+                  />
+
                 </div>
-              </div>
 
-              <div className="action-row">
-                <button
-                  className="add-cart-btn"
-                  onClick={() => {
-                    if (!selectedSizes[product.id]) {
-                      alert("Please select size");
-                      return;
-                    }
-
-                    addToCart({
-                      id: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.imageUrl,
-                      size: selectedSizes[product.id],
-                      quantity: 1,
-                      rating: currentRating,
-                    });
+                {/* NAME */}
+                <h2
+                  style={{
+                    marginTop:
+                      "15px",
+                    fontSize:
+                      "22px"
                   }}
                 >
-                  Add to Cart
-                </button>
+                  {item.name}
+                </h2>
 
-                <button
-                  className="buy-now-btn"
-                  onClick={() => {
-                    if (!selectedSizes[product.id]) {
-                      alert("Please select size");
-                      return;
-                    }
-
-                    navigate("/checkout", {
-                      state: {
-                        buyNowProduct: {
-                          id: product.id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.imageUrl,
-                          size: selectedSizes[product.id],
-                          quantity: 1,
-                          rating: currentRating,
-                        },
-                      },
-                    });
+                {/* CATEGORY */}
+                <p
+                  style={{
+                    color:
+                      "gray"
                   }}
                 >
-                  Buy Now
-                </button>
+                  {item.category}
+                </p>
+
+                {/* RATINGS */}
+                <div
+                  style={{
+                    marginTop:
+                      "10px",
+                    display:
+                      "flex",
+                    alignItems:
+                      "center",
+                    gap: "10px"
+                  }}
+                >
+
+                  {[1,2,3,4,5]
+                    .map((star) => (
+
+                      <span
+                        key={star}
+
+                        onClick={() =>
+
+                          setUserRatings({
+
+                            ...userRatings,
+
+                            [item.id]:
+                              star
+
+                          })
+                        }
+
+                        style={{
+                          cursor:
+                            "pointer",
+                          fontSize:
+                            "24px",
+                          color:
+
+                            star <=
+                            (
+                              userRatings[
+                                item.id
+                              ] ||
+
+                              Math.round(
+                                randomRating
+                              )
+                            )
+
+                              ? "gold"
+
+                              : "#d1d5db"
+                        }}
+                      >
+                        ★
+                      </span>
+
+                    ))}
+
+                  <span>
+                    {
+                      userRatings[
+                        item.id
+                      ] ||
+                      randomRating
+                    }
+                  </span>
+
+                </div>
+
+                {/* PRICE */}
+                <div
+                  style={{
+                    marginTop:
+                      "15px"
+                  }}
+                >
+
+                  <span
+                    style={{
+                      color:
+                        "green",
+                      fontWeight:
+                        "bold",
+                      marginRight:
+                        "10px"
+                    }}
+                  >
+                    {
+                      randomDiscount
+                    }
+                  </span>
+
+                  <span
+                    style={{
+                      textDecoration:
+                        "line-through",
+                      color:
+                        "gray",
+                      marginRight:
+                        "10px"
+                    }}
+                  >
+                    ₹
+                    {item.price + 1000}
+                  </span>
+
+                  <span
+                    style={{
+                      fontWeight:
+                        "bold",
+                      fontSize:
+                        "28px"
+                    }}
+                  >
+                    ₹{item.price}
+                  </span>
+
+                </div>
+
+                {/* SIZE */}
+                <div
+                  style={{
+                    marginTop:
+                      "20px"
+                  }}
+                >
+
+                  <p
+                    style={{
+                      fontWeight:
+                        "bold"
+                    }}
+                  >
+                    Select Size
+                  </p>
+
+                  <div
+                    style={{
+                      display:
+                        "flex",
+                      gap: "10px"
+                    }}
+                  >
+
+                    {[
+                      "XS",
+                      "S",
+                      "M",
+                      "L",
+                      "XL"
+                    ].map((size) => (
+
+                      <button
+                        key={size}
+
+                        onClick={() =>
+                          setSelectedSizes({
+
+                            ...selectedSizes,
+
+                            [item.id]:
+                              size
+
+                          })
+                        }
+
+                        style={{
+                          width:
+                            "45px",
+                          height:
+                            "45px",
+                          border:
+
+                            selectedSizes[
+                              item.id
+                            ] === size
+
+                              ? "2px solid #2874f0"
+
+                              : "1px solid #ccc",
+
+                          background:
+
+                            selectedSizes[
+                              item.id
+                            ] === size
+
+                              ? "#e8f0fe"
+
+                              : "white",
+
+                          borderRadius:
+                            "8px",
+                          cursor:
+                            "pointer",
+                          fontWeight:
+                            "bold"
+                        }}
+                      >
+                        {size}
+                      </button>
+
+                    ))}
+
+                  </div>
+
+                </div>
+
+                {/* BUTTONS */}
+                <div
+                  style={{
+                    display:
+                      "flex",
+                    gap: "15px",
+                    marginTop:
+                      "25px"
+                  }}
+                >
+
+                  {/* ADD TO CART */}
+                  <button
+                    onClick={() =>
+
+                      handleAddToCart({
+
+                        ...item,
+
+                        selectedSize:
+
+                          selectedSizes[
+                            item.id
+                          ] || "M"
+                      })
+                    }
+
+                    style={{
+                      flex: 1,
+                      background:
+                        "#ff9f00",
+                      color:
+                        "white",
+                      border:
+                        "none",
+                      padding:
+                        "14px",
+                      borderRadius:
+                        "8px",
+                      fontWeight:
+                        "bold",
+                      cursor:
+                        "pointer"
+                    }}
+                  >
+                    Add To Cart
+                  </button>
+
+                  {/* BUY NOW */}
+                  <button
+                    onClick={() =>
+
+                      handleBuyNow({
+
+                        ...item,
+
+                        selectedSize:
+
+                          selectedSizes[
+                            item.id
+                          ] || "M"
+                      })
+                    }
+
+                    style={{
+                      flex: 1,
+                      background:
+                        "#2874f0",
+                      color:
+                        "white",
+                      border:
+                        "none",
+                      padding:
+                        "14px",
+                      borderRadius:
+                        "8px",
+                      fontWeight:
+                        "bold",
+                      cursor:
+                        "pointer"
+                    }}
+                  >
+                    Buy Now
+                  </button>
+
+                </div>
+
               </div>
-            </div>
-          );
-        })}
+
+            );
+          }
+        )}
+
       </div>
-    </>
+
+    </div>
   );
 }
 
 export default ProductList;
-
-
-
 
 
 

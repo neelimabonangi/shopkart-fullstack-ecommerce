@@ -3,57 +3,175 @@ import { Link, useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 
 function Signup() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+
+  const [email, setEmail] =
+    useState("");
+
+  const [password, setPassword] =
+    useState("");
+
+  const [confirmPassword,
+    setConfirmPassword] =
+    useState("");
+
+  const navigate =
+    useNavigate();
 
   const handleSignup = (e) => {
+
     e.preventDefault();
 
-    if (!email || !password) {
-      alert("Please fill all fields");
+    // ✅ EMPTY CHECK
+    if (
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+
+      alert(
+        "Please fill all fields"
+      );
+
       return;
     }
 
-    // ✅ Frontend-only signup simulation
-    console.log("Signup data:", { email, password });
-    alert("Account created successfully ✅");
+    // ✅ PASSWORD MATCH
+    if (
+      password !==
+      confirmPassword
+    ) {
 
-    // 🔁 Redirect to login
+      alert(
+        "Passwords do not match ❌"
+      );
+
+      return;
+    }
+
+    // ✅ GET EXISTING USERS
+    const existingUsers =
+      JSON.parse(
+        localStorage.getItem("users")
+      ) || [];
+
+    // ✅ CHECK EMAIL ALREADY EXISTS
+    const alreadyExists =
+      existingUsers.find(
+        (user) =>
+          user.email.toLowerCase() ===
+          email.toLowerCase()
+      );
+
+    // ✅ IF EMAIL EXISTS
+    if (alreadyExists) {
+
+      alert(
+        "Account already exists. Please login ✅"
+      );
+
+      navigate("/login");
+
+      return;
+    }
+
+    // ✅ SAVE NEW USER
+    const newUser = {
+
+      email:
+        email.toLowerCase(),
+
+      password
+
+    };
+
+    existingUsers.push(newUser);
+
+    localStorage.setItem(
+      "users",
+      JSON.stringify(existingUsers)
+    );
+
+    // ✅ SUCCESS
+    alert(
+      "Account created successfully ✅"
+    );
+
+    // ✅ GO TO LOGIN
     navigate("/login");
   };
 
   return (
-    <div className="auth-container">
-      <form className="auth-box" onSubmit={handleSignup}>
-        <h2>Create Account</h2>
 
+    <div className="auth-container">
+
+      <form
+        className="auth-box"
+        onSubmit={handleSignup}
+      >
+
+        <h2>
+          Create Account
+        </h2>
+
+        {/* EMAIL */}
         <input
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) =>
+            setEmail(
+              e.target.value
+            )
+          }
           required
         />
 
+        {/* PASSWORD */}
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) =>
+            setPassword(
+              e.target.value
+            )
+          }
           required
         />
 
-        <button type="submit">Signup</button>
+        {/* CONFIRM PASSWORD */}
+        <input
+          type="password"
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChange={(e) =>
+            setConfirmPassword(
+              e.target.value
+            )
+          }
+          required
+        />
 
+        {/* SIGNUP BUTTON */}
+        <button type="submit">
+          Signup
+        </button>
+
+        {/* LOGIN LINK */}
         <p>
+
           Already have an account?{" "}
-          <Link to="/login">Login</Link>
+
+          <Link to="/login">
+            Login
+          </Link>
+
         </p>
+
       </form>
+
     </div>
   );
 }
 
 export default Signup;
-
