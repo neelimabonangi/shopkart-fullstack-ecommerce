@@ -47,7 +47,7 @@ function AdminDashboard() {
 
     axios
       .get(
-        "http://localhost:8080/api/orders"
+        "https://shopkart-fullstack-ecommerce.onrender.com/api/orders"
       )
 
       .then((res) => {

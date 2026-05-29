@@ -40,7 +40,7 @@ function AdminProducts() {
         // ✅ DIRECT API
         const res =
           await axios.get(
-            "http://localhost:8080/api/products"
+            "https://shopkart-fullstack-ecommerce.onrender.com/api/products"
           );
 
         console.log(
@@ -101,7 +101,7 @@ function AdminProducts() {
     try {
 
       await axios.delete(
-        `http://localhost:8080/api/products/${id}`
+        `https://shopkart-fullstack-ecommerce.onrender.com/api/products/${id}`
       );
 
       setProducts((prev) =>

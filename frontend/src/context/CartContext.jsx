@@ -8,7 +8,7 @@ import axios from "axios";
 
 // ✅ BACKEND URL
 const BASE_URL =
-  "http://localhost:8080";
+  "https://shopkart-fullstack-ecommerce.onrender.com";
 
 // ✅ CONTEXT
 export const CartContext =

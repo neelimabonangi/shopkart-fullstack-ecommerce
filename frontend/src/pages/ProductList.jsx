@@ -57,7 +57,7 @@ function ProductList({
 
   // ✅ API
   const API_URL =
-    "http://localhost:8080/api/products";
+    "https://shopkart-fullstack-ecommerce.onrender.com";
 
   // ✅ FETCH PRODUCTS
   useEffect(() => {
