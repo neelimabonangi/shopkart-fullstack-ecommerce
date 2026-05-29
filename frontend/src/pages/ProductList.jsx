@@ -57,7 +57,7 @@ function ProductList({
 
   // ✅ API
   const API_URL =
-    "https://shopkart-fullstack-ecommerce.onrender.com";
+    "https://shopkart-fullstack-ecommerce.onrender.com/api/products";
 
   // ✅ FETCH PRODUCTS
   useEffect(() => {
